@@ -299,12 +299,14 @@ namespace SelfMovingCart.Patches
 
         float GetNextCartStepHeight()
         {
-            Vector3 frontPosition = transform.position + transform.forward * 1.5f;
+            float heightGuideDist = 1.5f;
+
+            Vector3 frontPosition = transform.position + transform.forward * heightGuideDist;
             if(!cartGuideForward)
-                frontPosition = transform.position + transform.forward * -1.5f;
+                frontPosition = transform.position + transform.forward * -heightGuideDist;
 
             if (isCartFollowingPath)
-                frontPosition = MiscHelper.GetPointTowardTarget(transform.position, pathCorners[cornerInd], 1.5f);
+                frontPosition = MiscHelper.GetPointTowardTarget(transform.position, pathCorners[cornerInd], heightGuideDist);
             frontPosition = GetNearestNavMeshPosition(frontPosition);
             cartHeightGuide.transform.position = frontPosition;
 

@@ -26,32 +26,33 @@ namespace SelfMovingCart.Patches
                 /****************** Cart Control ******************/
                 /**************************************************/
                 // To Player
-                if (Input.GetKeyDown(KeyCode.F))
+                if (Input.GetKeyDown(ConfigManager.goToPlayerKey.Value))
                 {
                     PhysGrabCartPatch.OrderNearestCart(0, __instance.transform.position);
                 }
+
                 // To Ship
-                if (Input.GetKeyDown(KeyCode.G))
+                if (Input.GetKeyDown(ConfigManager.goToShipKey.Value))
                 {
                     PhysGrabCartPatch.OrderNearestCart(1, __instance.transform.position);
                 }
                 // To Near Extraction
-                if (Input.GetKeyDown(KeyCode.V))
+                if (Input.GetKeyDown(ConfigManager.goToExtractionKey.Value))
                 {
                     PhysGrabCartPatch.OrderNearestCart(2, __instance.transform.position);
                 }
                 // To Inside Extraction
-                if (Input.GetKeyDown(KeyCode.B))
+                if (Input.GetKeyDown(ConfigManager.extractKey.Value))
                 {
                     PhysGrabCartPatch.OrderNearestCart(3, __instance.transform.position);
                 }
             }
 
             // Remote control
-            bool isUpArrow = Input.GetKey(KeyCode.UpArrow);
-            bool isDownArrow = Input.GetKey(KeyCode.DownArrow);
-            bool isLeftArrow = Input.GetKey(KeyCode.LeftArrow);
-            bool isRightArrow = Input.GetKey(KeyCode.RightArrow);
+            bool isUpArrow = Input.GetKey(ConfigManager.goForwardKey.Value);
+            bool isDownArrow = Input.GetKey(ConfigManager.goBackwardsKey.Value);
+            bool isLeftArrow = Input.GetKey(ConfigManager.turnLeftKey.Value);
+            bool isRightArrow = Input.GetKey(ConfigManager.turnRightKey.Value);
 
             bool madeMovement = isUpArrow || isDownArrow || isRightArrow || isLeftArrow;
 

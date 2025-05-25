@@ -2,7 +2,7 @@
 
 This mod allows you to remotely control the carts in the game. You can order the cart to come to you, go to extraction, go to ship, or directly control its movement using the arrow keys.
 
-It was created as a part of the following YouTube video: 
+It was created as a part of the following YouTube video:  https://youtu.be/naOCUkJkmzk
 
 
 # Supported Features

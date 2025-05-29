@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace SelfMovingCart.Patches
 {
@@ -16,49 +18,87 @@ namespace SelfMovingCart.Patches
         static bool lastFrameHadMovement = false;
         static CartSelfMovementManager closestCart = null;
 
+        public static bool cartControlMode = false;
+
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
         static void UpdatePatch(PlayerController __instance)
         {
             if (ChatManagerPatch.chatState != ChatManager.ChatState.Active) // Ignore input when player is writing in chat.
             {
+
+                /**************************************************/
+                /****************** Cart Switch ******************/
+                /**************************************************/
+                InputControl valSwitch = ((InputControl)Keyboard.current)[ConfigManager.cartSwitchKey.Value];
+                if (((ButtonControl)valSwitch).wasPressedThisFrame)
+                {
+                    PhysGrabCartPatch.SwitchCarts();
+                }
+
                 /**************************************************/
                 /****************** Cart Control ******************/
                 /**************************************************/
                 // To Player
-                if (Input.GetKeyDown(ConfigManager.goToPlayerKey.Value))
+                InputControl val1 = ((InputControl)Keyboard.current)[ConfigManager.goToPlayerKey.Value];
+                if (((ButtonControl)val1).wasPressedThisFrame)
                 {
-                    PhysGrabCartPatch.OrderNearestCart(0, __instance.transform.position);
+                    PhysGrabCartPatch.OrderCart(0, __instance.transform.position);
                 }
 
                 // To Ship
-                if (Input.GetKeyDown(ConfigManager.goToShipKey.Value))
+                InputControl val2 = ((InputControl)Keyboard.current)[ConfigManager.goToShipKey.Value];
+                if (((ButtonControl)val2).wasPressedThisFrame)
                 {
-                    PhysGrabCartPatch.OrderNearestCart(1, __instance.transform.position);
+                    PhysGrabCartPatch.OrderCart(1, __instance.transform.position);
                 }
+
                 // To Near Extraction
-                if (Input.GetKeyDown(ConfigManager.goToExtractionKey.Value))
+                InputControl val3 = ((InputControl)Keyboard.current)[ConfigManager.goToExtractionKey.Value];
+                if (((ButtonControl)val3).wasPressedThisFrame)
                 {
-                    PhysGrabCartPatch.OrderNearestCart(2, __instance.transform.position);
+                    PhysGrabCartPatch.OrderCart(2, __instance.transform.position);
                 }
+
                 // To Inside Extraction
-                if (Input.GetKeyDown(ConfigManager.extractKey.Value))
+                InputControl val4 = ((InputControl)Keyboard.current)[ConfigManager.extractKey.Value];
+                if (((ButtonControl)val4).wasPressedThisFrame)
                 {
-                    PhysGrabCartPatch.OrderNearestCart(3, __instance.transform.position);
+                    PhysGrabCartPatch.OrderCart(3, __instance.transform.position);
                 }
             }
 
-            // Remote control
-            bool isUpArrow = Input.GetKey(ConfigManager.goForwardKey.Value);
-            bool isDownArrow = Input.GetKey(ConfigManager.goBackwardsKey.Value);
-            bool isLeftArrow = Input.GetKey(ConfigManager.turnLeftKey.Value);
-            bool isRightArrow = Input.GetKey(ConfigManager.turnRightKey.Value);
+            /****************************************************/
+            /****************** Remote Control ******************/
+            /****************************************************/
+            // Arrows
+            InputControl valUp = ((InputControl)Keyboard.current)[ConfigManager.goForwardKey.Value];
+            InputControl valDown = ((InputControl)Keyboard.current)[ConfigManager.goBackwardsKey.Value];
+            InputControl valLeft = ((InputControl)Keyboard.current)[ConfigManager.turnLeftKey.Value];
+            InputControl valRight = ((InputControl)Keyboard.current)[ConfigManager.turnRightKey.Value];
+
+            bool isUpArrow = ((ButtonControl)valUp).isPressed;
+            bool isDownArrow = ((ButtonControl)valDown).isPressed;
+            bool isLeftArrow = ((ButtonControl)valLeft).isPressed;
+            bool isRightArrow = ((ButtonControl)valRight).isPressed;
+
+            // WASD
+            InputControl valCartControlModeKey = ((InputControl)Keyboard.current)[ConfigManager.cartRemoteControlModeKey.Value];
+            cartControlMode = ((ButtonControl)valCartControlModeKey).isPressed;
+
+            if (cartControlMode)
+            {
+                isUpArrow = isUpArrow || InputManagerPatch.GetMovementY() > 0f;
+                isDownArrow = isDownArrow || InputManagerPatch.GetMovementY() < 0f;
+                isLeftArrow = isLeftArrow || InputManagerPatch.GetMovementX() < 0f;
+                isRightArrow = isRightArrow || InputManagerPatch.GetMovementX() > 0f;
+            }
 
             bool madeMovement = isUpArrow || isDownArrow || isRightArrow || isLeftArrow;
 
             if(madeMovement || lastFrameHadMovement)
             {
-                CartSelfMovementManager tempClosestCart = PhysGrabCartPatch.GetClosestCart(__instance.transform.position);
+                CartSelfMovementManager tempClosestCart = PhysGrabCartPatch.GetCartToOrder(__instance.transform.position);
                 if (tempClosestCart != null)
                 {
                     if(tempClosestCart != closestCart && closestCart != null) // If this is a different cart from the one we were controlling before.

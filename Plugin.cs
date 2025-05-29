@@ -43,6 +43,7 @@ namespace SelfMovingCart
             harmony.PatchAll(typeof(TruckHealerPatch));
             harmony.PatchAll(typeof(PhysGrabHingePatch));
             harmony.PatchAll(typeof(ChatManagerPatch));
+            harmony.PatchAll(typeof(InputManagerPatch));
         }
     }
 }

@@ -103,6 +103,7 @@ namespace SelfMovingCart.Patches
                 // Set anchor to the center of the screen
                 instructionRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
                 instructionRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                instructionRectTransform.pivot = new Vector2(0.5f, 0.5f);
 
                 // Customizing the text.
                 instructionRectTransform.anchoredPosition = new Vector2(0f, -20f);
@@ -112,7 +113,7 @@ namespace SelfMovingCart.Patches
 
             switchCartTMP.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
             string text = "Switch Cart: ";
-            if (controlledCart == -1) text += "Nearest Cart.";
+            if (controlledCart == -1) text += "Nearest Cart";
             else
             {
                 CartSelfMovementManager cart = carts[controlledCart];

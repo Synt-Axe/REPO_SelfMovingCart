@@ -18,7 +18,7 @@ namespace SelfMovingCart.Patches
     class PhysGrabCartPatch
     {
         public static List<CartSelfMovementManager> carts = new List<CartSelfMovementManager>();
-        static int controlledCart = -1; // -1 = closest, otherwise it's the index of the cart to control.
+        public static int controlledCart = -1; // -1 = closest, otherwise it's the index of the cart to control.
 
         static TextMeshProUGUI switchCartTMP;
         static Coroutine switchCartTextCoroutine;
@@ -82,7 +82,7 @@ namespace SelfMovingCart.Patches
         {
             if (controlledCart + 1 < carts.Count) controlledCart++;
             else controlledCart = -1;
-            
+
             // Show ui.
             SwitchCartUI();
         }

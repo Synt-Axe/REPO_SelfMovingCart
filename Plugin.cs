@@ -44,6 +44,7 @@ namespace SelfMovingCart
             harmony.PatchAll(typeof(PhysGrabHingePatch));
             harmony.PatchAll(typeof(ChatManagerPatch));
             harmony.PatchAll(typeof(InputManagerPatch));
+            harmony.PatchAll(typeof(CartModeUI)); // <-- Added: Patch for Cart Mode UI
         }
     }
 }

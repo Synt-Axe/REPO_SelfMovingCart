@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using TMPro;
 using UnityEngine;
 
@@ -14,9 +14,9 @@ namespace SelfMovingCart.Patches
         {
             // Top-right corner, moved up by 80 pixels
             component.pivot = new Vector2(1f, 1f);
-            component.anchoredPosition = new Vector2(-20f, -100f); // -20 Y - 80 = -100
-            component.anchorMin = new Vector2(1f, 1f);
-            component.anchorMax = new Vector2(1f, 1f);
+            component.anchoredPosition = new Vector2(20f, 100f); // -20 Y - 80 = -100
+            component.anchorMin = new Vector2(0f, 0f);
+            component.anchorMax = new Vector2(0f, 0f);
             component.sizeDelta = new Vector2(0f, 0f);
         }
 
@@ -49,8 +49,8 @@ namespace SelfMovingCart.Patches
                 cartModeText.color = new Color(1f, 0.95f, 0.5f, 1f);
                 cartModeText.fontSize = 22f;
                 cartModeText.enableWordWrapping = false;
-                cartModeText.alignment = TextAlignmentOptions.TopRight;
-                cartModeText.horizontalAlignment = HorizontalAlignmentOptions.Right;
+                cartModeText.alignment = TextAlignmentOptions.TopLeft;
+                cartModeText.horizontalAlignment = HorizontalAlignmentOptions.Left;
                 cartModeText.verticalAlignment = VerticalAlignmentOptions.Top;
 
                 cartModeTextInstance.transform.SetParent(hud.transform, false);

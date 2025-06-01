@@ -30,8 +30,7 @@ namespace SelfMovingCart.Patches
                 /**************************************************/
                 /****************** Cart Switch ******************/
                 /**************************************************/
-                InputControl valSwitch = ((InputControl)Keyboard.current)[ConfigManager.cartSwitchKey.Value];
-                if (((ButtonControl)valSwitch).wasPressedThisFrame)
+                if (WasButtonPressedThisFrame(ConfigManager.cartSwitchKey.Value))
                 {
                     PhysGrabCartPatch.SwitchCarts();
                 }
@@ -40,29 +39,25 @@ namespace SelfMovingCart.Patches
                 /****************** Cart Control ******************/
                 /**************************************************/
                 // To Player
-                InputControl val1 = ((InputControl)Keyboard.current)[ConfigManager.goToPlayerKey.Value];
-                if (((ButtonControl)val1).wasPressedThisFrame)
+                if (WasButtonPressedThisFrame(ConfigManager.goToPlayerKey.Value))
                 {
                     PhysGrabCartPatch.OrderCart(0, __instance.transform.position);
                 }
 
                 // To Ship
-                InputControl val2 = ((InputControl)Keyboard.current)[ConfigManager.goToShipKey.Value];
-                if (((ButtonControl)val2).wasPressedThisFrame)
+                if (WasButtonPressedThisFrame(ConfigManager.goToShipKey.Value))
                 {
                     PhysGrabCartPatch.OrderCart(1, __instance.transform.position);
                 }
 
                 // To Near Extraction
-                InputControl val3 = ((InputControl)Keyboard.current)[ConfigManager.goToExtractionKey.Value];
-                if (((ButtonControl)val3).wasPressedThisFrame)
+                if (WasButtonPressedThisFrame(ConfigManager.goToExtractionKey.Value))
                 {
                     PhysGrabCartPatch.OrderCart(2, __instance.transform.position);
                 }
 
                 // To Inside Extraction
-                InputControl val4 = ((InputControl)Keyboard.current)[ConfigManager.extractKey.Value];
-                if (((ButtonControl)val4).wasPressedThisFrame)
+                if (WasButtonPressedThisFrame(ConfigManager.extractKey.Value))
                 {
                     PhysGrabCartPatch.OrderCart(3, __instance.transform.position);
                 }
@@ -72,19 +67,13 @@ namespace SelfMovingCart.Patches
             /****************** Remote Control ******************/
             /****************************************************/
             // Arrows
-            InputControl valUp = ((InputControl)Keyboard.current)[ConfigManager.goForwardKey.Value];
-            InputControl valDown = ((InputControl)Keyboard.current)[ConfigManager.goBackwardsKey.Value];
-            InputControl valLeft = ((InputControl)Keyboard.current)[ConfigManager.turnLeftKey.Value];
-            InputControl valRight = ((InputControl)Keyboard.current)[ConfigManager.turnRightKey.Value];
-
-            bool isUpArrow = ((ButtonControl)valUp).isPressed;
-            bool isDownArrow = ((ButtonControl)valDown).isPressed;
-            bool isLeftArrow = ((ButtonControl)valLeft).isPressed;
-            bool isRightArrow = ((ButtonControl)valRight).isPressed;
+            bool isUpArrow = IsButtonPressed(ConfigManager.goForwardKey.Value);
+            bool isDownArrow = IsButtonPressed(ConfigManager.goBackwardsKey.Value);
+            bool isLeftArrow = IsButtonPressed(ConfigManager.turnLeftKey.Value);
+            bool isRightArrow = IsButtonPressed(ConfigManager.turnRightKey.Value);
 
             // WASD
-            InputControl valCartControlModeKey = ((InputControl)Keyboard.current)[ConfigManager.cartRemoteControlModeKey.Value];
-            cartControlMode = ((ButtonControl)valCartControlModeKey).isPressed;
+            cartControlMode = IsButtonPressed(ConfigManager.cartRemoteControlModeKey.Value);
 
             if (cartControlMode)
             {
@@ -119,6 +108,39 @@ namespace SelfMovingCart.Patches
             {
                 closestCart = null;
             }
+        }
+
+
+
+        static List<string> mouseBtns = new List<string>() { "leftButton", "rightButton", "middleButton", "forwardButton", "backButton" };
+        static bool WasButtonPressedThisFrame(string btn)
+        {
+            InputControl val;
+            if (mouseBtns.Contains(btn))
+            {
+                val = ((InputControl)Mouse.current)[btn];
+            }
+            else
+            {
+                val = ((InputControl)Keyboard.current)[btn];
+            }
+
+            return ((ButtonControl)val).wasPressedThisFrame;
+        }
+
+        static bool IsButtonPressed(string btn)
+        {
+            InputControl val;
+            if (mouseBtns.Contains(btn))
+            {
+                val = ((InputControl)Mouse.current)[btn];
+            }
+            else
+            {
+                val = ((InputControl)Keyboard.current)[btn];
+            }
+
+            return ((ButtonControl)val).isPressed;
         }
     }
 }

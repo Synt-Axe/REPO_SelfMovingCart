@@ -82,9 +82,9 @@ namespace SelfMovingCart.Patches
         {
             if (controlledCart + 1 < carts.Count) controlledCart++;
             else controlledCart = -1;
-
+            
             // Show ui.
-            SwitchCartUI();
+            if(!ConfigManager.alwaysShowCartModeText.Value) SwitchCartUI();
         }
 
         static void SwitchCartUI()
@@ -104,23 +104,24 @@ namespace SelfMovingCart.Patches
                 instructionRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
                 instructionRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
                 instructionRectTransform.pivot = new Vector2(0.5f, 0.5f);
+                instructionRectTransform.sizeDelta = new Vector2(400f, 50f);
 
                 // Customizing the text.
                 instructionRectTransform.anchoredPosition = new Vector2(0f, -20f);
                 switchCartTMP.alignment = TextAlignmentOptions.Center;
-                switchCartTMP.fontSize = 20;
+                switchCartTMP.fontSize = 22;
             }
 
-            switchCartTMP.color = new Color(Color.white.r, Color.white.g, Color.white.b, 1f);
-            string text = "Switch Cart: ";
-            if (controlledCart == -1) text += "Nearest Cart";
-            else
+            switchCartTMP.color = new Color(1f, 0.95f, 0.5f, 1f);
+
+            string text = "Cart Mode: Nearest Cart";
+            if (controlledCart != -1) 
             {
                 CartSelfMovementManager cart = carts[controlledCart];
                 int val = ReflectionHelper.GetPrivateField<int>(cart.GetComponent<PhysGrabCart>(), "haulCurrent");
                 int distance = Mathf.RoundToInt(Vector3.Distance(PlayerController.instance.transform.position, cart.transform.position));
 
-                text += $"Val: {val}. Dist: {distance}";
+                text = $"Cart Mode: Cart #{controlledCart + 1} (Val: {val}, Dist: {distance}m)";
             }
 
             switchCartTMP.text = text;

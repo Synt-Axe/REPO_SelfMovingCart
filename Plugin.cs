@@ -15,7 +15,7 @@ namespace SelfMovingCart
     {
         private const string modGUID = "Syntaxe.SelfMovingCart";
         private const string modName = "Self Moving Cart";
-        private const string modVersion = "1.0.0";
+        private const string modVersion = "1.3.3";
 
 
         private readonly Harmony harmony = new Harmony(modGUID);
@@ -44,7 +44,8 @@ namespace SelfMovingCart
             harmony.PatchAll(typeof(PhysGrabHingePatch));
             harmony.PatchAll(typeof(ChatManagerPatch));
             harmony.PatchAll(typeof(InputManagerPatch));
-            harmony.PatchAll(typeof(CartModeUI)); // <-- Added: Patch for Cart Mode UI
+
+            if(ConfigManager.alwaysShowCartModeText.Value) harmony.PatchAll(typeof(CartModeUI));
         }
     }
 }

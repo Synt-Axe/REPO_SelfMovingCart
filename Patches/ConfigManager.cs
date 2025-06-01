@@ -23,6 +23,8 @@ namespace SelfMovingCart.Patches
         public static ConfigEntry<string> turnRightKey;
         public static ConfigEntry<string> turnLeftKey;
 
+        public static ConfigEntry<bool> alwaysShowCartModeText;
+
         public static void Initialize(ConfigFile cfg)
         {
             cartSwitchKey = cfg.Bind<string>("Controls", "CartSwitchKey", "r", "The key used to select whether your orders will be excuted by the nearest cart, or a particular cart.");
@@ -38,6 +40,8 @@ namespace SelfMovingCart.Patches
             goBackwardsKey = cfg.Bind<string>("Controls", "GoBackwardsKey", "downArrow", "The key used to order the cart to go backwards.");
             turnRightKey = cfg.Bind<string>("Controls", "TurnRightKey", "rightArrow", "The key used to order the cart to turn right");
             turnLeftKey = cfg.Bind<string>("Controls", "TurnLeftKey", "leftArrow", "The key used to order the cart to turn left");
+
+            alwaysShowCartModeText = cfg.Bind<bool>("UI", "AlwaysShowCartModeText", false, "Determines whether the cart mode ui will always be shown or if it will only be shown when the player switches the mode and then disappears again.");
 
             // Update old key names to new ones
             UpdateDeprecatedKeys();

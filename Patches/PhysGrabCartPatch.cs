@@ -110,6 +110,8 @@ namespace SelfMovingCart.Patches
                 instructionRectTransform.anchoredPosition = new Vector2(0f, -20f);
                 switchCartTMP.alignment = TextAlignmentOptions.Center;
                 switchCartTMP.fontSize = 22;
+
+                instructionUI.gameObject.SetActive(true);
             }
 
             switchCartTMP.color = new Color(1f, 0.95f, 0.5f, 1f);
@@ -153,21 +155,35 @@ namespace SelfMovingCart.Patches
 
         static Transform CreateUIElement()
         {
-            // Getting the HUD parent.
-            Transform hudCanvas = GameObject.FindObjectsOfType<Canvas>()[1].transform;
-            Transform gameHudObject = hudCanvas.GetChild(0).GetChild(0); // This is where all the screen ui is kept.
+            GameObject hud = GameObject.Find("Game Hud");
+            GameObject haul = GameObject.Find("Tax Haul");
+            if (hud == null || haul == null)
+                return null;
 
-            // Creating the instruction text ui as a copy from the extraction count ui text.
-            Transform uiTransform = GameObject.Instantiate(gameHudObject.GetChild(0), gameHudObject);
+            TMP_FontAsset font = haul.GetComponent<TMP_Text>().font;
+            GameObject textInstance = new GameObject("Cart Mode HUD");
+            textInstance.SetActive(false);
+            textInstance.AddComponent<TextMeshProUGUI>();
 
-            // Removing the unnecessary script.
-            GoalUI goalUI = uiTransform.GetComponent<GoalUI>();
-            if (goalUI != null) GameObject.Destroy(goalUI);
+            TextMeshProUGUI textComponent = textInstance.GetComponent<TextMeshProUGUI>();
+            textComponent.font = font;
+            textComponent.color = Color.white;
+            textComponent.fontSize = 22f;
+            textComponent.enableWordWrapping = false;
+            textComponent.alignment = TextAlignmentOptions.Center;
 
-            // Removing scanlines.
-            GameObject.Destroy(uiTransform.GetChild(0).gameObject);
+            textInstance.transform.SetParent(hud.transform, false);
 
-            return uiTransform;
+            // Set the position.
+            RectTransform component = textInstance.GetComponent<RectTransform>();
+
+            component.pivot = new Vector2(0.5f, 0.5f);
+            component.anchoredPosition = new Vector2(0f, -20f);
+            component.anchorMin = new Vector2(0.5f, 0.5f);
+            component.anchorMax = new Vector2(0.5f, 0.5f);
+            component.sizeDelta = new Vector2(400f, 50f);
+
+            return textInstance.transform;
         }
     }
 }

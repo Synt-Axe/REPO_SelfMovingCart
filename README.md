@@ -4,6 +4,7 @@ This mod allows you to remotely control the carts in the game. You can order the
 
 It was created as a part of the following YouTube video: https://youtu.be/naOCUkJkmzk
 
+**Must be installed on all clients.**
 
 # Supported Features
 

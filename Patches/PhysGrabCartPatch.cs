@@ -23,17 +23,6 @@ namespace SelfMovingCart.Patches
         static TextMeshProUGUI switchCartTMP;
         static Coroutine switchCartTextCoroutine;
 
-        [HarmonyPatch("Start")]
-        [HarmonyPostfix]
-        static void CartStartPatch(PhysGrabCart __instance)
-        {
-            // Small carts are not included.
-            if (__instance.isSmallCart) return;
-
-            CartSelfMovementManager cart = __instance.gameObject.AddComponent<CartSelfMovementManager>();
-            carts.Add(cart);
-        }
-
         [HarmonyPatch("FixedUpdate")]
         [HarmonyPostfix]
         static void CartFixedUpdatePatch(PhysGrabCart __instance, ref bool ___cartBeingPulled)
@@ -44,8 +33,9 @@ namespace SelfMovingCart.Patches
             CartSelfMovementManager cart = __instance.gameObject.GetComponent<CartSelfMovementManager>();
             if (cart == null)
             {
-                carts.Remove(cart);
-                return;
+                Debug.Log("Creating CartSelfMovementManager instance on cart \"" + __instance.name + "\".");
+                cart = __instance.gameObject.AddComponent<CartSelfMovementManager>();
+                carts.Add(cart);
             }
             cart.isCartBeingPulled = ___cartBeingPulled;
         }
